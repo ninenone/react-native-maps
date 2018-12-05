@@ -27,6 +27,14 @@ NSInteger _zIndexBeforeOpen = 0;
     MKPinAnnotationView *_pinView;
 }
 
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self.layer addObserver:self forKeyPath:@"zPosition" options:NSKeyValueObservingOptionNew context:nil];
+    }
+    return self;
+}
+
 - (void)reactSetFrame:(CGRect)frame
 {
     // Make sure we use the image size when available
@@ -309,6 +317,16 @@ NSInteger _zIndexBeforeOpen = 0;
     _zIndexBeforeOpen = zIndex;
     _zIndex = _calloutIsOpen ? zIndex + CALLOUT_OPEN_ZINDEX_BASELINE : zIndex;
     self.layer.zPosition = zIndex;
+}
+
+- (void)dealloc {
+    [self.layer removeObserver:self forKeyPath:@"zPosition"];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"zPosition"]) {
+        self.layer.zPosition = _zIndex;
+    }
 }
 
 @end
