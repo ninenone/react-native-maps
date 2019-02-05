@@ -242,7 +242,7 @@ public class AirMapMarker extends AirMapFeature {
     if (marker != null) {
       marker.setInfoWindowAnchor(calloutAnchorX, calloutAnchorY);
     }
-    update();
+    update(false);
   }
 
     public void setTracksViewChanges(boolean tracksViewChanges) {
